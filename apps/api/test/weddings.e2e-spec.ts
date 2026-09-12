@@ -22,6 +22,11 @@ describe('Flujos críticos de bodas (E2E)', () => {
     await request(app.getHttpServer()).post('/api/v1/auth/login').send({ email: 'admin@local.test', password: 'incorrecta' }).expect(401);
   });
 
+  it('expone salud y disponibilidad de base de datos', async () => {
+    await request(app.getHttpServer()).get('/api/v1/health').expect(200);
+    await request(app.getHttpServer()).get('/api/v1/health/ready').expect(200);
+  });
+
   it('autentica al administrador', async () => {
     const response = await request(app.getHttpServer()).post('/api/v1/auth/login').send({ email: 'admin@local.test', password: 'password' }).expect(201);
     token = response.body.accessToken;

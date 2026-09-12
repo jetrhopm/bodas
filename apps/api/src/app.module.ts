@@ -3,5 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth';
 import { WeddingsModule } from './weddings';
 import { PublicModule } from './public';
-@Module({ imports: [ConfigModule.forRoot({ isGlobal: true }), AuthModule, WeddingsModule, PublicModule] })
+import { HealthModule } from './health';
+@Module({ imports: [ConfigModule.forRoot({ isGlobal: true }), AuthModule, WeddingsModule, PublicModule, HealthModule] })
 export class AppModule {}
