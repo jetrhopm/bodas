@@ -28,6 +28,15 @@ describe('Flujos críticos de bodas (E2E)', () => {
     expect(token).toEqual(expect.any(String));
   });
 
+  it('rota el refresh token y revoca la sesión al cerrar sesión', async () => {
+    const agent = request.agent(app.getHttpServer());
+    await agent.post('/api/v1/auth/login').send({ email: 'admin@local.test', password: 'password' }).expect('Set-Cookie', /bodas_refresh/).expect(201);
+    const refreshed = await agent.post('/api/v1/auth/refresh').expect(201);
+    expect(refreshed.body.accessToken).toEqual(expect.any(String));
+    await agent.post('/api/v1/auth/logout').expect(201);
+    await agent.post('/api/v1/auth/refresh').expect(401);
+  });
+
   it('crea, actualiza y audita una tarea', async () => {
     const created = await request(app.getHttpServer()).post('/api/v1/weddings/demo-wedding/tasks').set('Authorization', `Bearer ${token}`).send({ title: `E2E ${Date.now()}`, category: 'Pruebas', internalOnly: true }).expect(201);
     taskId = created.body.id;
@@ -35,6 +44,11 @@ describe('Flujos críticos de bodas (E2E)', () => {
     await request(app.getHttpServer()).post(`/api/v1/weddings/demo-wedding/tasks/${taskId}/comments`).set('Authorization', `Bearer ${token}`).send({ body: 'Comentario E2E' }).expect(201);
     const audit = await request(app.getHttpServer()).get('/api/v1/weddings/demo-wedding/audit').set('Authorization', `Bearer ${token}`).expect(200);
     expect(audit.body.some((event: { entityId: string }) => event.entityId === taskId)).toBe(true);
+  });
+
+  it('guarda y descarga un adjunto mediante el proveedor local', async () => {
+    const uploaded = await request(app.getHttpServer()).post('/api/v1/weddings/demo-wedding/files').set('Authorization', `Bearer ${token}`).field('taskId', taskId).attach('file', Buffer.from('comprobante de prueba'), 'comprobante.txt').expect(201);
+    await request(app.getHttpServer()).get(`/api/v1/weddings/demo-wedding/files/${uploaded.body.id}/download`).set('Authorization', `Bearer ${token}`).expect('Content-Disposition', /comprobante.txt/).expect(200);
   });
 
   it('entrega reporte protegido y exportaciones CSV/PDF', async () => {
