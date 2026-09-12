@@ -99,10 +99,13 @@ model Wedding {
  date DateTime?
  ceremonyVenue String?
  receptionVenue String?
+ coverImageUrl String?
+ coverSubtitle String?
  dressCode String?
  program String? @db.Text
  giftsInfo String? @db.Text
  galleryUrl String?
+ galleryUrls String? @db.Text
  isPublished Boolean @default(false)
  status WeddingStatus @default(PLANNING)
  leadStatus LeadStatus @default(CONTRACTED)
