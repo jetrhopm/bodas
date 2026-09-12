@@ -220,3 +220,17 @@ model AuditLog {
  actor User? @relation(fields:[actorId],references:[id])
  @@index([weddingId])
 }
+model Vendor {
+ id String @id @default(cuid())
+ name String
+ category String
+ contactName String?
+ phone String?
+ email String?
+ services String? @db.Text
+ priceRange String?
+ rating Int?
+ internalNotes String? @db.Text
+ createdAt DateTime @default(now())
+ @@index([category,name])
+}
