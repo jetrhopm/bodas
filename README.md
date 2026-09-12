@@ -6,8 +6,8 @@ MVP en monorepo: `apps/web` (Next.js App Router) y `apps/api` (NestJS REST). MyS
 
 - Fechas de evento se guardan como instantes UTC; la boda conserva IANA timezone y moneda (MXN por defecto).
 - Roles: ADMIN global; PLANNER/ASSISTANT por asignación a boda; COUPLE sólo por `coupleUserId`; el invitado usa token opaco de alcance único.
-- Implementado: login JWT de 15 min, guardia de acceso por boda, bodas, tareas, grupos familiares, obligaciones/pagos idempotentes y RSVP público transaccional con historial. UI: acceso, panel, detalle y RSVP móvil.
-- Preparado: esquema para sesiones, auditoría, parejas, grupos, invitaciones, pagos y asignaciones. Pendiente: refresh-cookie rotativa, CRUD de clientes/proveedores/documentos, importación CSV, portal de pareja, WhatsApp/archivos, calendario y pruebas E2E completas.
+- Implementado: login JWT de 15 min, acceso por boda y rol, portal de pareja, bodas, tareas/comentarios/adjuntos, invitados/CSV/RSVP, agenda, finanzas, proveedores y contrataciones, documentos protegidos, invitación configurable, reportes CSV/PDF y auditoría visible.
+- Calidad: pruebas E2E para autenticación, tareas, auditoría, reportes, exportaciones y RSVP público. Ejecutar `npm run test:e2e -w @bodas/api`; prepara datos de demostración en la base de desarrollo configurada.
 
 ## Arranque
 
@@ -16,7 +16,7 @@ MVP en monorepo: `apps/web` (Next.js App Router) y `apps/api` (NestJS REST). MyS
 3. `npm run prisma:generate -w @bodas/api && npm run prisma:migrate -w @bodas/api -- --name init && npm run prisma:seed -w @bodas/api`
 4. En dos terminales: `npm run dev:api` y `npm run dev:web`.
 
-La semilla sólo sirve en desarrollo: `admin@local.test` / `password`; cámbiala o elimínala fuera de desarrollo. RSVP de muestra: `/invitacion/demo-invitacion-segura`.
+La semilla sólo sirve en desarrollo: `admin@local.test` / `password`; cámbiala o elimínala fuera de desarrollo. RSVP de muestra: `/invitacion/demo-invitacion-segura`. Las pruebas E2E deben ejecutarse únicamente contra una base de desarrollo desechable.
 
 ## Reglas relevantes
 
