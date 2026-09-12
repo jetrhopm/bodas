@@ -1,1 +1,1 @@
-import type { Config } from 'tailwindcss'; export default {content:['./app/**/*.{ts,tsx}'],theme:{extend:{colors:{cream:'#fbf7f1',sage:'#6e806b',rose:'#c88787',ink:'#332d2a',gold:'#b8955b'},fontFamily:{serif:['Georgia','serif']} }},plugins:[]} satisfies Config;
+import type { Config } from 'tailwindcss'; export default {content:['./app/**/*.{ts,tsx}'],theme:{extend:{colors:{cream:'#fbf7f1',sage:'#6e806b','sage-dark':'#38523e',rose:'#c88787',ink:'#332d2a',gold:'#b8955b'},fontFamily:{serif:['Playfair Display','Georgia','serif']} }},plugins:[]} satisfies Config;
