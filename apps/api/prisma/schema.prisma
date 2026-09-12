@@ -90,6 +90,13 @@ model Wedding {
  timezone String @default("America/Mexico_City")
  currency String @default("MXN")
  date DateTime?
+ ceremonyVenue String?
+ receptionVenue String?
+ dressCode String?
+ program String? @db.Text
+ giftsInfo String? @db.Text
+ galleryUrl String?
+ isPublished Boolean @default(false)
  status WeddingStatus @default(PLANNING)
  leadStatus LeadStatus @default(CONTRACTED)
  clientId String? @unique
