@@ -1,0 +1,7 @@
+{
+  "name": "bodas-planner",
+  "private": true,
+  "workspaces": ["apps/*"],
+  "scripts": {"dev:web":"npm run dev -w @bodas/web","dev:api":"npm run start:dev -w @bodas/api","build":"npm run build -w @bodas/api && npm run build -w @bodas/web","lint":"npm run lint -ws","test":"npm run test -w @bodas/api"},
+  "engines":{"node":">=20.11"}
+}

@@ -1,0 +1,2 @@
+@tailwind base;@tailwind components;@tailwind utilities;
+*{box-sizing:border-box} body{margin:0;background:#fbf7f1;color:#332d2a;font-family:Arial,sans-serif} button,input,textarea{font:inherit} button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #b8955b;outline-offset:2px}
