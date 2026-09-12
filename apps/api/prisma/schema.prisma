@@ -240,6 +240,24 @@ model AuditLog {
  actor User? @relation(fields:[actorId],references:[id])
  @@index([weddingId])
 }
+model FileRecord {
+ id String @id @default(cuid())
+ weddingId String
+ name String
+ mimeType String
+ path String
+ visibility String @default("INTERNAL")
+ createdAt DateTime @default(now())
+ @@index([weddingId,visibility])
+}
+model TaskComment {
+ id String @id @default(cuid())
+ taskId String
+ authorId String
+ body String @db.Text
+ createdAt DateTime @default(now())
+ @@index([taskId,createdAt])
+}
 model Vendor {
  id String @id @default(cuid())
  name String
