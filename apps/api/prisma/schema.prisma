@@ -243,12 +243,14 @@ model AuditLog {
 model FileRecord {
  id String @id @default(cuid())
  weddingId String
+ taskId String?
  name String
  mimeType String
  path String
  visibility String @default("INTERNAL")
  createdAt DateTime @default(now())
  @@index([weddingId,visibility])
+ @@index([weddingId,taskId])
 }
 model TaskComment {
  id String @id @default(cuid())
