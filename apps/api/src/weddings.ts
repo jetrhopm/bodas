@@ -1,4 +1,5 @@
-import { Body, Controller, ForbiddenException, Get, Injectable, Module, NotFoundException, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, ForbiddenException, Get, Injectable, Module, NotFoundException, Param, Patch, Post, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { IsArray, IsBoolean, IsDateString, IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 import { createHash, randomBytes } from 'crypto';
@@ -33,6 +34,8 @@ class PublishDto { @IsOptional() @IsString() ceremonyVenue?:string; @IsOptional(
  @Patch(':id/tasks/:taskId') async taskStatus(@Req()r:any,@Param('id')id:string,@Param('taskId')taskId:string,@Body()d:TaskUpdateDto){await this.access.assert(r.user,id);const task=await this.prisma.task.findFirst({where:{id:taskId,weddingId:id}});if(!task)throw new NotFoundException();return this.prisma.task.update({where:{id:taskId},data:d})}
  @Post(':id/tasks/:taskId/comments') async comment(@Req()r:any,@Param('id')id:string,@Param('taskId')taskId:string,@Body()d:CommentDto){await this.access.assert(r.user,id);const task=await this.prisma.task.findFirst({where:{id:taskId,weddingId:id}});if(!task)throw new NotFoundException();return this.prisma.taskComment.create({data:{taskId,authorId:r.user.sub,body:d.body}})}
  @Post(':id/team') async assign(@Req()r:any,@Param('id')id:string,@Body()d:AssignDto){if(r.user.role!=='ADMIN')throw new ForbiddenException();await this.access.assert(r.user,id);return this.prisma.weddingAssignment.upsert({where:{weddingId_userId:{weddingId:id,userId:d.userId}},update:{canViewFinance:d.canViewFinance||false},create:{weddingId:id,userId:d.userId,canViewFinance:d.canViewFinance||false}})}
+ @Get(':id/files') async files(@Req()r:any,@Param('id')id:string){await this.access.assert(r.user,id);return this.prisma.fileRecord.findMany({where:{weddingId:id}})}
+ @Post(':id/files') @UseInterceptors(FileInterceptor('file',{dest:'uploads'})) async file(@Req()r:any,@Param('id')id:string,@UploadedFile()file:any){await this.access.assert(r.user,id);if(!file)throw new NotFoundException('Archivo requerido');return this.prisma.fileRecord.create({data:{weddingId:id,name:file.originalname,mimeType:file.mimetype,path:file.path,visibility:'INTERNAL'}})}
  @Get(':id/activities') async activities(@Req()r:any,@Param('id')id:string){await this.access.assert(r.user,id);return this.prisma.activity.findMany({where:{weddingId:id},orderBy:{startsAt:'asc'}})}
  @Post(':id/activities') async activity(@Req()r:any,@Param('id')id:string,@Body()d:ActivityDto){await this.access.assert(r.user,id);if(r.user.role==='COUPLE')throw new ForbiddenException();return this.prisma.activity.create({data:{...d,weddingId:id,startsAt:new Date(d.startsAt),endsAt:d.endsAt?new Date(d.endsAt):undefined}})}
  @Post(':id/groups') async group(@Req()r:any,@Param('id')id:string,@Body()d:CreateGroupDto){await this.access.assert(r.user,id);return this.prisma.guestGroup.create({data:{...d,weddingId:id}})}
