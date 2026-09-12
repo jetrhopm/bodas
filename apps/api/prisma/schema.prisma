@@ -63,6 +63,18 @@ model User {
  tasks Task[] @relation("TaskAssignee")
  audit AuditLog[]
 }
+model Activity {
+ id String @id @default(cuid())
+ weddingId String
+ title String
+ type String
+ startsAt DateTime
+ endsAt DateTime?
+ responsible String?
+ notes String? @db.Text
+ wedding Wedding @relation(fields:[weddingId],references:[id])
+ @@index([weddingId,startsAt])
+}
 model Session {
  id String @id @default(cuid())
  userId String
@@ -90,6 +102,7 @@ model Wedding {
  invitations Invitation[]
  obligations Obligation[]
  audit AuditLog[]
+ activities Activity[]
  @@index([status,date])
 }
 model Client {
